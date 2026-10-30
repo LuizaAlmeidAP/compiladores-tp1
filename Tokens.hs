@@ -12,14 +12,15 @@ data Token = ID String       -- e.g. xy123
             |LEQUAL         -- <=
             |GTHAN       -- >
             |GEQUAL      -- >=
-            |WRITE          -- write
-            |READ           -- read
             |LPAREN          -- (
             |RPAREN          -- )
             |COMMA           -- ,
             |SEMICOLON       -- ;
             |COLON           -- :
-            |ASSIGN           -- :=
+            |ASSIGN           -- :=  
+            --palavras reservadas
+            |WRITE          -- write
+            |READ           -- read
             |VAR              -- var
             |CONST            -- const
             |PROGRAM           -- program
