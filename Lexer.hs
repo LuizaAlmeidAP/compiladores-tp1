@@ -61,3 +61,14 @@ lexerText "do" = DO
 lexerText "true" = TRUE
 lexerText "false" = FALSE
 lexerText xs   = ID xs
+
+
+-- função auxiliar para verificar se um carater é válido num identificador
+isIdent :: Char -> Bool
+isIdent x = isAlphaNum x || x == '_'
+
+-- ler toda a entrada e imprimir a lista de tokens
+main :: IO ()
+main = do
+  txt <- getContents
+  print (lexer txt)
