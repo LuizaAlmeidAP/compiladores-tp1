@@ -28,14 +28,12 @@ data Token = ID String       -- e.g. xy123
             |END                -- end
             |MOD                -- mod
             |AND                -- and
-            |FOR                -- for
             |RECORD         -- record
             |IF                -- if
             |THEN              -- then
             |ELSE              -- else
             |TYPE              -- type
             |WHILE             -- while
-            |DO                -- do
             |TRUE              -- true
             |FALSE             -- false
             deriving (Eq,Show)
