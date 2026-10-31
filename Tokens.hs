@@ -30,6 +30,8 @@ data Token = ID String       -- e.g. xy123
             |END                -- end
             |MOD                -- mod
             |AND                -- and
+            |OR                 -- or
+            |NOT                -- not
             |RECORD         -- record
             |IF                -- if
             |THEN              -- then

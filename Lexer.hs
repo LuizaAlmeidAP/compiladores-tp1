@@ -59,6 +59,8 @@ lexerText "while" = WHILE
 lexerText "do" = DO
 lexerText "true" = TRUE
 lexerText "false" = FALSE
+lexerText "not" = NOT
+lexerText "or" = OR
 lexerText xs   = ID xs
 
 
