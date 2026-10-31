@@ -1,3 +1,5 @@
+module Tokens where
+
 data Token = ID String       -- e.g. xy123
             |INT  Int         -- e.g. 123
             |REAL Float      -- e.g. 123.45
