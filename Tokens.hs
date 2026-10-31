@@ -36,6 +36,7 @@ data Token = ID String       -- e.g. xy123
             |ELSE              -- else
             |TYPE              -- type
             |WHILE             -- while
+            |DO             -- do
             |TRUE              -- true
             |FALSE             -- false
             deriving (Eq,Show)

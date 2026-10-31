@@ -56,6 +56,7 @@ lexerText "then" = THEN
 lexerText "else" = ELSE
 lexerText "type" = TYPE
 lexerText "while" = WHILE
+lexerText "do" = DO
 lexerText "true" = TRUE
 lexerText "false" = FALSE
 lexerText xs   = ID xs

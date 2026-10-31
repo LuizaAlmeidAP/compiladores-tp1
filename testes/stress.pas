@@ -1,0 +1,1 @@
+if(x=10)then y:=x+1 else write(x*2);
