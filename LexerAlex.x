@@ -6,6 +6,32 @@ $white = [\ \t\n\r]
 $alpha = [_a-zA-Z]
 $digit = [0-9]
 
+@id     = $alpha($alpha|$digit)*
+
+--Macros por causa da sintaxe case insensitive
+@if     = [iI][fF]
+@then   = [tT][hH][eE][nN]
+@else   = [eE][lL][sS][eE]
+@while  = [wW][hH][iI][lL][eE]
+@do      = [dD][oO]
+@read    = [rR][eE][aA][dD]
+@write   = [wW][rR][iI][tT][eE]
+@program = [pP][rR][oO][gG][rR][aA][mM]
+@begin   = [bB][eE][gG][iI][nN]
+@end     = [eE][nN][dD]
+@var     = [vV][aA][rR]
+@integer = [iI][nN][tT][eE][gG][eE][rR]
+@boolean = [bB][oO][oO][lL][eE][aA][nN]
+@real    = [rR][eE][aA][lL]
+@string  = [sS][tT][rR][iI][nN][gG]
+@and     = [aA][nN][dD]
+@or      = [oO][rR]
+@not     = [nN][oO][tT]
+@true    = [tT][rR][uU][eE]
+@false   = [fF][aA][lL][sS][eE]
+@div     = [dD][iI][vV]
+@mod     = [mM][oO][dD]
+
 tokens :-
     --espaços e comentários
     $white+     ;
@@ -13,98 +39,113 @@ tokens :-
 
     --palavras reservadas e operadores de texto (div e mod por causa do
     --first match. se ficar na zona das operacos o lexer ia ler o div e mod como identificadores)
-    if      {\_ -> IF}
-    then    {\_ -> THEN}
-    else    {\_ -> ELSE}
-    while   {\_ -> WHILE}
-    do      {\_ -> DO}
-    read    {\_ -> READ}
-    write   {\_ -> WRITE}
-    program {\_ -> PROGRAM}
-    begin   {\_ -> BEGIN}
-    end     {\_ -> END}
-    var     {\_ -> VAR}
-    integer {\_ -> INTEGER}
-    boolean {\_ -> BOOLEAN}
-    and     {\_ -> AND}
-    or      {\_ -> OR}
-    not     {\_ -> NOT}
-    true    {\_ -> TRUE}
-    false   {\_ -> FALSE}
-    div   {\_ -> DIV}
-    mod   {\_ -> MOD}
+    @if         {\_ -> TkIf}
+    @then       {\_ -> TkThen}
+    @else       {\_ -> TkElse}
+    @while      {\_ -> TkWhile}
+    @do         {\_ -> TkDo}
+    @read       {\_ -> TkRead}
+    @write      {\_ -> TkWrite}
+    @program    {\_ -> TkProgram}
+    @begin      {\_ -> TkBegin}
+    @end        {\_ -> TkEnd}
+    @var        {\_ -> TkVar}
+    @integer    {\_ -> TkTypeInteger}
+    @boolean    {\_ -> TkTypeBoolean}
+    @real       {\_ -> TkTypeReal}
+    @string     {\_ -> TkTypeString}
+    @and        {\_ -> TkAnd}
+    @or         {\_ -> TkOr}
+    @not        {\_ -> TkNot}
+    @true       {\_ -> TkTrue}
+    @false      {\_ -> TkFalse}
+    @div        {\_ -> TkDiv}
+    @mod        {\_ -> TkMod}
+
+    --strings
+    \" [^\"]* \" {\s -> TkString (init (tail s))}
+    \' [^\']* \' {\s -> TkString (init (tail s))}
 
     --identificadores
-    $alpha($alpha|$digit)*      {\s -> ID s}
+    @id      {\s -> TkId s}
 
     --números
-    $digit+     {\s -> INT (read s)}
+    $digit+     {\s -> TkInt (read s)}
+    $digit+\.$digit+    {\s -> TkReal (read s)}
 
     --símbolos
     --comparação
-    "="     {\_ -> EQUAL}
-    "<>"    {\_ -> NEQUAL}
-    "<"     {\_ -> LTHAN}
-    ">"     {\_ -> GTHAN}
-    "<="    {\_ -> LEQUAL}
-    ">="    {\_ -> GEQUAL}
+    "="     {\_ -> TkEqual}
+    "<>"    {\_ -> TkNequal}
+    "<"     {\_ -> TkLthan}
+    ">"     {\_ -> TkGthan}
+    "<="    {\_ -> TkLequal}
+    ">="    {\_ -> TkGequal}
     --aritméticos
-    "+"     {\_ -> PLUS}
-    "-"     {\_ -> MINUS}
-    "*"     {\_ -> MULT}
-    "/"     {\_ -> REALDIV}
+    "+"     {\_ -> TkPlus}
+    "-"     {\_ -> TkMinus}
+    "*"     {\_ -> TkMult}
+    "/"     {\_ -> TkRealDiv}
     --pontuação
-    ":="    {\_ -> ASSIGN}
-    ";"     {\_ -> SEMICOLON}
-    "."     {\_ -> PERIOD}
-    ","     {\_ -> COMMA}
-    "("     {\_ -> LPAREN}
-    ")"     {\_ -> RPAREN}
-    ":"     {\_ -> COLON}
+    ":="    {\_ -> TkAssign}
+    ";"     {\_ -> TkSemicolon}
+    "."     {\_ -> TkPeriod}
+    ","     {\_ -> TkComma}
+    "("     {\_ -> TkLparen}
+    ")"     {\_ -> TkRparen}
+    ":"     {\_ -> TkColon}
 
 
 {
 
-data Token = ID String
-            |INT Int
-            |IF
-            |THEN
-            |ELSE
-            |WHILE
-            |DO
-            |READ
-            |WRITE
-            |PROGRAM
-            |BEGIN
-            |END
-            |VAR
-            |INTEGER
-            |BOOLEAN
-            |AND
-            |OR
-            |NOT
-            |TRUE
-            |FALSE
-            |EQUAL
-            |NEQUAL
-            |LTHAN
-            |GTHAN
-            |LEQUAL
-            |GEQUAL
-            |PLUS
-            |MINUS
-            |MULT
-            |DIV
-            |REALDIV
-            |MOD
-            |ASSIGN
-            |SEMICOLON
-            |PERIOD
-            |COMMA
-            |LPAREN
-            |RPAREN
-            |COLON
-            deriving (Eq, Show)
+data Token = TkId String
+           | TkInt Int
+           | TkReal Float
+           | TkString String
+           --palavras reservadas
+           | TkIf
+           | TkThen
+           | TkElse
+           | TkWhile
+           | TkDo
+           | TkRead
+           | TkWrite
+           | TkProgram
+           | TkBegin
+           | TkEnd
+           | TkVar
+           --palavras reservadas -> tipos de dados
+           | TkTypeInteger
+           | TkTypeBoolean
+           | TkTypeReal
+           | TkTypeString
+           --palavras reservadas -> aritmetica e logica booleana
+           | TkAnd
+           | TkOr
+           | TkNot
+           | TkTrue
+           | TkFalse
+           | TkEqual
+           | TkNequal
+           | TkLthan
+           | TkGthan
+           | TkLequal
+           | TkGequal
+           | TkPlus
+           | TkMinus
+           | TkMult
+           | TkDiv
+           | TkRealDiv
+           | TkMod
+           --pontuacao
+           | TkAssign
+           | TkSemicolon
+           | TkPeriod
+           | TkComma
+           | TkLparen
+           | TkRparen
+           | TkColon
+           deriving (Eq, Show)
 
 main :: IO()
 main = do
