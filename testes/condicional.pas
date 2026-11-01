@@ -1,7 +1,12 @@
-if a <= 100 then
+program Condicional;
+var
+  a, b : integer;
+begin
+  if a <= 100 then
     b := 1
-else
+  else
     if a >= 200 then
-        b := 2
+      b := 2
     else
-        b := 0;
+      b := 0;
+end.
