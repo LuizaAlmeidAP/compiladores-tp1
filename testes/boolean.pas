@@ -1,8 +1,6 @@
-ativo := true;
-valido := false;
-
-if (x >= 10) and (y <> 20) then
-    write(ativo)
-else
-    if (z < 5) and (z <= w) then
-        write(false);
+program Stress;
+var
+  x, y : integer;
+begin
+  if(x=10)then y:=x+1 else write(x*2);
+end.
