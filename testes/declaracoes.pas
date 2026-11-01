@@ -5,4 +5,5 @@ var
   ativo : boolean;
   nome : string;
 begin
+  a := 1;
 end.
