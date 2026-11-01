@@ -1,1 +1,6 @@
-divisao := if_teste + mod1 + whileTrue;
+program Colisao;
+var
+  divisao, if_teste, mod1, whileTrue : integer;
+begin
+  divisao := if_teste + mod1 + whileTrue;
+end.
