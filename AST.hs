@@ -2,7 +2,7 @@ module AST where
 
 --programa principal
 data Program = Prog String Declrs Stmt  --program Nome; var...beging...end.
-            | ProgWithoutVar String Stmt --program Noem; begin...end.
+            | ProgWithoutVar String Stmt --program Nome; begin...end.
             deriving (Show, Eq)
 
 --declaracoes de variaveis

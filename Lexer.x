@@ -1,4 +1,7 @@
-{module Main where}
+{
+module Lexer where
+}
+
 
 %wrapper "basic"
 
@@ -147,8 +150,5 @@ data Token = TkId String
            | TkColon
            deriving (Eq, Show)
 
-main :: IO()
-main = do
-    txt <- getContents
-    print(alexScanTokens txt)
+
 }
