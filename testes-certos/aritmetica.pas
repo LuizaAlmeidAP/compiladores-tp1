@@ -7,3 +7,4 @@ begin
   y := x + 5 * 2;
   z := (x - y) / 3;
 end.
+

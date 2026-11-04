@@ -35,10 +35,13 @@ $digit = [0-9]
 @div     = [dD][iI][vV]
 @mod     = [mM][oO][dD]
 
+$any       = [.\n\r]
+$notbrace = $any # [\}] --tudo que não é o '}' (para comentários)
+
 tokens :-
     --espaços e comentários
     $white+     ;
-    "{" ~[\}]* "}"     ;
+    "{" $notbrace* "}"     ;
 
     --palavras reservadas e operadores de texto (div e mod por causa do
     --first match. se ficar na zona das operacos o lexer ia ler o div e mod como identificadores)
