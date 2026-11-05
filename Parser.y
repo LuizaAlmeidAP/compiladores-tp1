@@ -106,11 +106,13 @@ Body : Stmt                                                  { $1 }
      | Stmt ';' Body                                         { CompoundStmt $1 $3 }
 
 Stmt : id ':=' Exp                                           { AssignStmt $1 $3 }
-     | if Exp then Stmt                                      { IfThenStmt $2 $4 }
-     | if Exp then Stmt else Stmt                            { IfThenElseStmt $2 $4 $6 }
-     | while Exp do Stmt                                     { WhileStmt $2 $4 }
+     | id ':=' ExpBool                                       { AssignStmtBool $1 $3 }
+     | if ExpBool then Stmt                                      { IfThenStmt $2 $4 }
+     | if ExpBool then Stmt else Stmt                            { IfThenElseStmt $2 $4 $6 }
+     | while ExpBool do Stmt                                     { WhileStmt $2 $4 }
      | read '(' id ')'                                       { ReadStmt $3 }
      | write '(' Exp ')'                                     { WriteStmt $3 }
+     | write '(' ExpBool ')'                                 { WriteStmtBool $3 }
      | begin Body end                                        { $2 }
 
 --expressoes
@@ -118,8 +120,6 @@ Exp : id                                                     { Var $1 }
     | int                                                    { IntLit $1 }
     | real                                                   { RealLit $1 }
     | str                                                    { StringLit $1 }
-    | true                                                   { TrueLit }
-    | false                                                  { FalseLit }
     | '(' Exp ')'                                            { $2 }
     --op aritmaticos
     | Exp '+' Exp                                            { Add $1 $3 }
@@ -128,17 +128,20 @@ Exp : id                                                     { Var $1 }
     | Exp '/' Exp                                            { RealDiv $1 $3 }
     | Exp div Exp                                            { Div $1 $3 }
     | Exp mod Exp                                            { Mod $1 $3 }
-    --op comparacao
-    | Exp '=' Exp                                            { Eq $1 $3 }
-    | Exp '<>' Exp                                           { Neq $1 $3 }
-    | Exp '<' Exp                                            { Lt $1 $3 }
-    | Exp '>' Exp                                            { Gt $1 $3 }
-    | Exp '<=' Exp                                           { Le $1 $3 }
-    | Exp '>=' Exp                                           { Ge $1 $3 }
-    --op logicos
-    | Exp and Exp                                            { And $1 $3 }
-    | Exp or Exp                                             { Or $1 $3 }
-    | not Exp                                                { Not $2 }
+    
+ExpBool :true                                                   { TrueLit }
+        |false                                                  { FalseLit }
+        | '(' ExpBool ')'                                           { $2 }
+        |Exp '=' Exp                                            { Eq $1 $3 }    
+        | Exp '<>' Exp                                           { Neq $1 $3 }
+        | Exp '<' Exp                                            { Lt $1 $3 }
+        | Exp '>' Exp                                            { Gt $1 $3 }
+        | Exp '<=' Exp                                           { Le $1 $3 }
+        | Exp '>=' Exp                                           { Ge $1 $3 }
+        --op logicos
+        | ExpBool and ExpBool                                    { And $1 $3 }
+        | ExpBool or ExpBool                                     { Or $1 $3 }
+        | not ExpBool                                            { Not $2 }
 
 {
 parseError :: [Token] -> a

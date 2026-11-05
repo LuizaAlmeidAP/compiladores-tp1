@@ -51,7 +51,7 @@ main = do
                 putStrLn " 9 - stress.pas"
                 putStrLn "10 - operadores.pas"
                 putStrLn "11 - IO.pas"
-                putStrLn "12 - incompativeis.pas"
+                putStrLn "12 - condicionalBooleana.pas"
                 putStrLn " 0 - Sair"
                 putStrLn "========================================="
                 putStr "Opção: "
@@ -69,8 +69,7 @@ main = do
                     "9"  -> "testes-certos/stress.pas"
                     "10" -> "testes-certos/operadores.pas"
                     "11" -> "testes-certos/IO.pas"
-                    "12" -> "testes-certos/incompativeis.pas"
-                    "13" -> "testes-certos/condicionalBooleana.pas"
+                    "12" -> "testes-certos/condicionalBooleana.pas"
                     "0"  -> "SAIR"
                     _    -> "ERRO"
             else do
