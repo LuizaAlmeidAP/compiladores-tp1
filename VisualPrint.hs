@@ -67,6 +67,7 @@ ppExp (Mod e1 e2) = draw "Mod" [ppExp e1, ppExp e2]
 
 --expressões booleanas
 ppExpBool :: ExpBool -> [String]
+ppExpBool (VarBool s) = [s]
 ppExpBool TrueLit = ["True"]
 ppExpBool FalseLit = ["False"]
 ppExpBool (Not e) = draw "Not" [ppExpBool e]
