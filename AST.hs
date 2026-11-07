@@ -44,7 +44,8 @@ data Exp = Var String
         deriving (Show, Eq)
 
 --expressões booleanas
-data ExpBool =  TrueLit
+data ExpBool =  VarBool String
+        | TrueLit
         | FalseLit
         --operadores logicos
         | And ExpBool ExpBool
