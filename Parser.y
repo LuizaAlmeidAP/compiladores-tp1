@@ -107,9 +107,12 @@ Body : Stmt                                                  { $1 }
 
 Stmt : id ':=' Exp                                           { AssignStmt $1 $3 }
      | id ':=' ExpBool                                       { AssignStmtBool $1 $3 }
-     | if ExpBool then Stmt                                      { IfThenStmt $2 $4 }
-     | if ExpBool then Stmt else Stmt                            { IfThenElseStmt $2 $4 $6 }
-     | while ExpBool do Stmt                                     { WhileStmt $2 $4 }
+     | if ExpBool then Stmt                                  { IfThenStmt $2 $4 }
+     | if id then Stmt                                       { IfThenStmt (VarBool $2) $4 }
+     | if ExpBool then Stmt else Stmt                        { IfThenElseStmt $2 $4 $6 }
+     | if id then Stmt else Stmt                             { IfThenElseStmt (VarBool $2) $4 $6 }
+     | while ExpBool do Stmt                                 { WhileStmt $2 $4 }
+     | while id do Stmt                                      { WhileStmt (VarBool $2) $4 }
      | read '(' id ')'                                       { ReadStmt $3 }
      | write '(' Exp ')'                                     { WriteStmt $3 }
      | write '(' ExpBool ')'                                 { WriteStmtBool $3 }
@@ -129,20 +132,26 @@ Exp : id                                                     { Var $1 }
     | Exp div Exp                                            { Div $1 $3 }
     | Exp mod Exp                                            { Mod $1 $3 }
     
-ExpBool :true                                                   { TrueLit }
-        |false                                                  { FalseLit }
-        | '(' ExpBool ')'                                           { $2 }
-        |Exp '=' Exp                                            { Eq $1 $3 }    
-        | Exp '<>' Exp                                           { Neq $1 $3 }
-        | Exp '<' Exp                                            { Lt $1 $3 }
-        | Exp '>' Exp                                            { Gt $1 $3 }
-        | Exp '<=' Exp                                           { Le $1 $3 }
-        | Exp '>=' Exp                                           { Ge $1 $3 }
+ExpBool : true                                               { TrueLit }
+        | false                                              { FalseLit }
+        | '(' ExpBool ')'                                    { $2 }
+        | Exp '=' Exp                                        { Eq $1 $3 }    
+        | Exp '<>' Exp                                       { Neq $1 $3 }
+        | Exp '<' Exp                                        { Lt $1 $3 }
+        | Exp '>' Exp                                        { Gt $1 $3 }
+        | Exp '<=' Exp                                       { Le $1 $3 }
+        | Exp '>=' Exp                                       { Ge $1 $3 }
         --op logicos
-        | ExpBool and ExpBool                                    { And $1 $3 }
-        | ExpBool or ExpBool                                     { Or $1 $3 }
-        | not ExpBool                                            { Not $2 }
-
+        | ExpBool and ExpBool                                { And $1 $3 }
+        | ExpBool and id %prec and                           { And $1 (VarBool $3) }
+        | id and ExpBool %prec and                           { And (VarBool $1) $3 }
+        | id and id %prec and                                { And (VarBool $1) (VarBool $3) }
+        | ExpBool or ExpBool                                 { Or $1 $3 }
+        | ExpBool or id %prec or                             { Or $1 (VarBool $3) }
+        | id or ExpBool %prec or                             { Or (VarBool $1) $3 }
+        | id or id %prec or                                  { Or (VarBool $1) (VarBool $3) }
+        | not ExpBool                                        { Not $2 }
+        | not id %prec not                                   { Not (VarBool $2) }
 {
 parseError :: [Token] -> a
 parseError [] = error "Erro de Sintaxe: O ficheiro terminou inesperadamente (EOF)."
