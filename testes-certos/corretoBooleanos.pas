@@ -1,4 +1,4 @@
-program Booleano;
+program Booleanos;
 var
   ativo, valido : boolean;
   x, y, z, w : integer;
