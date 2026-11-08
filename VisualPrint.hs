@@ -2,24 +2,23 @@ module VisualPrint where
 
 import AST
 
---simbolos visuais para desenhar a arvore
+--símbolos visuais para desenhar a árvore
 branch :: String
 branch = "├── "
 
 pipe :: String
 pipe  =  "│   "
 
---funcao principal
+--função principal
 visualPrintAST :: Program -> String
-visualPrintAST prog = unlines (ppProgram prog) --unlines pega na lista e junta tudo num bloco de texto unico inserindo paragrafos
+visualPrintAST prog = unlines (ppProgram prog)
 
---espacamento e traços aos nos descendentes
+--espaçamento e traços aos nós descendentes
 indent :: [String] -> [String]
 indent [] = []
 indent (x:xs) = (branch ++ x) : map (pipe ++) xs
 
---desenha o nome do no atual e processa os subniveis
---recebe o nome do ramo principal e a lista dos elementos dentro dele
+--desenha o nome do nó atual e processa os subníveis
 draw :: String -> [[String]] -> [String]
 draw name children = name : concatMap indent children
 
@@ -28,7 +27,7 @@ ppProgram :: Program -> [String]
 ppProgram (Prog name declrs stmt) = draw "Program" [[name], ppDeclrs declrs, ppStmt stmt]
 ppProgram (ProgWithoutVar name stmt) = draw "Program" [[name], ppStmt stmt]
 
---declaracoes
+--declarações
 ppDeclrs :: Declrs -> [String]
 ppDeclrs (Declr vars t) = draw "Declr" [[show vars], ppType t]
 ppDeclrs (CompoundDeclr d1 d2) = draw "CompoundDeclr" [ppDeclrs d1, ppDeclrs d2]
@@ -48,11 +47,11 @@ ppStmt (IfThenStmt cond th) = draw "IfThen" [ppExpBool cond, ppStmt th]
 ppStmt (IfThenElseStmt cond th el) = draw "IfThenElse" [ppExpBool cond, ppStmt th, ppStmt el]
 ppStmt (WhileStmt cond body) = draw "While" [ppExpBool cond, ppStmt body]
 ppStmt (ReadStmt var) = draw "Read" [[var]]
-ppStmt (WriteStmt e) = draw "write" [ppExp e]
-ppStmt (WriteStmtBool e) = draw "writeBool" [ppExpBool e]
+ppStmt (WriteStmt e) = draw "Write" [ppExp e]
+ppStmt (WriteStmtBool e) = draw "WriteBool" [ppExpBool e]
 ppStmt (CompoundStmt s1 s2) = draw "CompoundStmt" [ppStmt s1, ppStmt s2]
 
---expressoes
+--expressões
 ppExp :: Exp -> [String]
 ppExp (Var s) = [s]
 ppExp (IntLit i) = [show i]
