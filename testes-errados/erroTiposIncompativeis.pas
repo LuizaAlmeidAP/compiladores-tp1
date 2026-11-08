@@ -1,4 +1,4 @@
-program Incompativeis;
+program TiposIncompativeis;
 var
     x : integer;
     ativo : boolean;
