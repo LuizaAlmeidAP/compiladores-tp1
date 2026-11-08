@@ -1,4 +1,4 @@
-program TerminoAntecipado;
+program CodigoAposEnd;
 begin
     x := 1
 end.       
