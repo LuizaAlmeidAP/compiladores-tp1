@@ -1,4 +1,4 @@
-program Colisao;
+program ColisaoPalavrasReservadas;
 var
   divisao, if_teste, mod1, whileTrue : integer;
 begin
