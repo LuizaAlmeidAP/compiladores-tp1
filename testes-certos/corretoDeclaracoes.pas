@@ -1,4 +1,4 @@
-program TesteTipos;
+program Declaracoes;
 var
   a, b : integer;
   media : real;
