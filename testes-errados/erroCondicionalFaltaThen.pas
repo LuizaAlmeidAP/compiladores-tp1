@@ -1,4 +1,4 @@
-program CondicionalEmFalta;
+program CondicionalFaltaThen;
 begin
 if x = 7 
     x := 1
