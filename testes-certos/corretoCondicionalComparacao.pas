@@ -1,4 +1,4 @@
-program CondicionalBooleana;
+program CondicionalComparacao;
 var
     x, y : integer;
 begin
