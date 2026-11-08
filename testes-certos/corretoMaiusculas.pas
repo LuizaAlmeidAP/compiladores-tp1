@@ -1,4 +1,4 @@
-PrOgRaM Teste;
+PrOgRaM mAIUSCulaS;
 VaR
   x : InTeGeR;
   WiTh : BoOlEaN;
