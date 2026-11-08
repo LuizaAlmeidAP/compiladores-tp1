@@ -1,4 +1,4 @@
-program EntradaSaida;
+program IO;
 var
   valor, resultado : integer;
 begin
