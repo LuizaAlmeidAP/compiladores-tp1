@@ -4,73 +4,75 @@ import Lexer
 import AST
 }
 
+--Analisador sintático
+
 %name parse
 %tokentype { Token }
 %error { parseError }
 
 %token
     --palavras reservadas da estrutura do programa
-    program     { TkProgram }
-    var         { TkVar }
-    begin       { TkBegin }
-    end         { TkEnd }
+    program                             { TkProgram }
+    var                                 { TkVar }
+    begin                               { TkBegin }
+    end                                 { TkEnd }
 
     --comandos
-    if          { TkIf }
-    then        { TkThen }
-    else        { TkElse }
-    while       { TkWhile }
-    do          { TkDo }
-    read        { TkRead }
-    write       { TkWrite }
+    if                                  { TkIf }
+    then                                { TkThen }
+    else                                { TkElse }
+    while                               { TkWhile }
+    do                                  { TkDo }
+    read                                { TkRead }
+    write                               { TkWrite }
 
     --tipos de dados
-    typeInt     { TkTypeInteger }
-    typeBool    { TkTypeBoolean }
-    typeReal    { TkTypeReal }
-    typeStr     { TkTypeString}
+    typeInt                             { TkTypeInteger }
+    typeBool                            { TkTypeBoolean }
+    typeReal                            { TkTypeReal }
+    typeStr                             { TkTypeString}
 
-    --valores literais e identificadores ($$ vai extrair o valor guardado)
-    id          { TkId $$ }
-    int         { TkInt $$ }
-    real        { TkReal $$ }
-    str         { TkString $$ }
-    true        { TkTrue }
-    false       { TkFalse }
+    --valores literais e identificadores
+    id                                  { TkId $$ }
+    int                                 { TkInt $$ }
+    real                                { TkReal $$ }
+    str                                 { TkString $$ }
+    true                                { TkTrue }
+    false                               { TkFalse }
 
-    --operadores logicos
-    and         { TkAnd }
-    or          { TkOr }
-    not         { TkNot }
+    --operadores lógicos
+    and                                 { TkAnd }
+    or                                  { TkOr }
+    not                                 { TkNot }
 
-    --operadores de comparacao
-    '='         { TkEqual }
-    '<>'        { TkNequal }
-    '<'         { TkLthan }
-    '>'         { TkGthan }
-    '<='        { TkLequal }
-    '>='        { TkGequal }
+    --operadores de comparação
+    '='                                 { TkEqual }
+    '<>'                                { TkNequal }
+    '<'                                 { TkLthan }
+    '>'                                 { TkGthan }
+    '<='                                { TkLequal }
+    '>='                                { TkGequal }
 
-    --operacoes aritmeticos
-    '+'         { TkPlus }
-    '-'         { TkMinus }
-    '*'         { TkMult }
-    '/'         { TkRealDiv }
-    div         { TkDiv }
-    mod         { TkMod }
+    --operadores aritméticos
+    '+'                                 { TkPlus }
+    '-'                                 { TkMinus }
+    '*'                                 { TkMult }
+    '/'                                 { TkRealDiv }
+    div                                 { TkDiv }
+    mod                                 { TkMod }
 
-    --pontuacao
-    ':='        { TkAssign }
-    ';'         { TkSemicolon }
-    '.'         { TkPeriod }
-    ','         { TkComma }
-    '('         { TkLparen }
-    ')'         { TkRparen }
-    ':'         { TkColon }
+    --pontuação
+    ':='                                { TkAssign }
+    ';'                                 { TkSemicolon }
+    '.'                                 { TkPeriod }
+    ','                                 { TkComma }
+    '('                                 { TkLparen }
+    ')'                                 { TkRparen }
+    ':'                                 { TkColon }
 
---precedencias
-%nonassoc then do
-%nonassoc else
+--precedências
+%nonassoc then do       --resolve a ambiguidade do 'dangling else'
+%nonassoc else          --resolve a ambiguidade do 'dangling else'
 %left or
 %left and
 %nonassoc '=' '<>' '<' '>' '<=' '>='
@@ -85,7 +87,7 @@ Program : program id ';' var Declrs begin Body end '.'      { Prog $2 $5 $7 }
         | program id ';' begin Body end '.'                 { ProgWithoutVar $2 $5 }
 
 
---declaracao de variavies
+--declaração de variáveis
 Declrs : Declr                                              { $1 }
         | Declr Declrs                                      { CompoundDeclr $1 $2 }
 
@@ -100,7 +102,7 @@ Type : typeInt                                              { TypeInt }
      | typeBool                                             { TypeBool }
      | typeStr                                              { TypeString }
 
---corpo e instrucoes
+--corpo e instruções
 Body : Stmt                                                  { $1 }
      | Stmt ';'                                              { $1 }
      | Stmt ';' Body                                         { CompoundStmt $1 $3 }
@@ -118,13 +120,13 @@ Stmt : id ':=' Exp                                           { AssignStmt $1 $3 
      | write '(' ExpBool ')'                                 { WriteStmtBool $3 }
      | begin Body end                                        { $2 }
 
---expressoes
+--expressões
 Exp : id                                                     { Var $1 }
     | int                                                    { IntLit $1 }
     | real                                                   { RealLit $1 }
     | str                                                    { StringLit $1 }
     | '(' Exp ')'                                            { $2 }
-    --op aritmaticos
+    --operadores aritméticos
     | Exp '+' Exp                                            { Add $1 $3 }
     | Exp '-' Exp                                            { Sub $1 $3 }
     | Exp '*' Exp                                            { Mult $1 $3 }
@@ -141,7 +143,8 @@ ExpBool : true                                               { TrueLit }
         | Exp '>' Exp                                        { Gt $1 $3 }
         | Exp '<=' Exp                                       { Le $1 $3 }
         | Exp '>=' Exp                                       { Ge $1 $3 }
-        --op logicos
+        --operadores lógicos
+        --%prec mantém a prioridade do operador lógico quando a regra termina em 'id'
         | ExpBool and ExpBool                                { And $1 $3 }
         | ExpBool and id %prec and                           { And $1 (VarBool $3) }
         | id and ExpBool %prec and                           { And (VarBool $1) $3 }
