@@ -1,4 +1,4 @@
-program LoopIncompativel;
+program LoopNaoBooleano;
 var
     x, y : integer;
 begin
